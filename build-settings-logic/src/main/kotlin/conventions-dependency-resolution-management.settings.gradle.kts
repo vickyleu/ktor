@@ -43,6 +43,10 @@ pluginManagement {
             }
 
             mavenLocal()
+            maven("${rootProject.projectDir.let {
+                if(it.name.startsWith("build-"))it.parentFile
+                else  it
+            }.resolve("maven/myRepo").absolutePath}")
 
             exclusiveContent {
                 forRepository {

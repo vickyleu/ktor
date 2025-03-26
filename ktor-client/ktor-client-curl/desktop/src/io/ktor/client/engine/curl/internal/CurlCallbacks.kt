@@ -16,7 +16,7 @@ import kotlin.coroutines.*
 /**
  *  The callback is getting called on each completely parser header line.
  */
-@OptIn(ExperimentalForeignApi::class)
+@OptIn(ExperimentalForeignApi::class, UnsafeNumber::class)
 internal fun onHeadersReceived(
     buffer: CPointer<ByteVar>,
     size: size_t,
@@ -44,7 +44,7 @@ internal fun onHeadersReceived(
 private fun isFinalHeaderLine(chunkSize: Long, buffer: CPointer<ByteVar>) =
     chunkSize == 2L && buffer[0] == 0x0D.toByte() && buffer[1] == 0x0A.toByte()
 
-@OptIn(ExperimentalForeignApi::class)
+@OptIn(ExperimentalForeignApi::class, UnsafeNumber::class)
 internal fun onBodyChunkReceived(
     buffer: CPointer<ByteVar>,
     size: size_t,
@@ -55,7 +55,7 @@ internal fun onBodyChunkReceived(
     return wrapper.onBodyChunkReceived(buffer, size, count)
 }
 
-@OptIn(ExperimentalForeignApi::class)
+@OptIn(ExperimentalForeignApi::class, UnsafeNumber::class)
 internal fun onBodyChunkRequested(
     buffer: CPointer<ByteVar>,
     size: size_t,
@@ -99,7 +99,7 @@ internal class CurlRequestBodyData(
 )
 
 internal interface CurlResponseBodyData {
-    @OptIn(ExperimentalForeignApi::class)
+    @OptIn(ExperimentalForeignApi::class, UnsafeNumber::class)
     fun onBodyChunkReceived(buffer: CPointer<ByteVar>, size: size_t, count: size_t): Int
     fun close(cause: Throwable? = null)
 }

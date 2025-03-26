@@ -7,7 +7,7 @@ package io.ktor.client.engine.curl.internal
 import kotlinx.cinterop.*
 import platform.posix.*
 
-@OptIn(ExperimentalForeignApi::class)
+@OptIn(ExperimentalForeignApi::class, UnsafeNumber::class)
 internal fun ByteArray.copyToBuffer(buffer: CPointer<ByteVar>, size: ULong, position: Int = 0) {
     usePinned { pinned ->
         memcpy(buffer, pinned.addressOf(position), size.convert())

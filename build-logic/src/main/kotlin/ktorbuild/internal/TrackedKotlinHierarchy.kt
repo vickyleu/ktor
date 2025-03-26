@@ -38,7 +38,7 @@ fun KotlinHierarchyTracker(): KotlinHierarchyTracker = KotlinHierarchyTrackerImp
 )
 
 @Suppress("DeprecatedCallableAddReplaceWith")
-private class KotlinHierarchyTrackerImpl(
+internal class KotlinHierarchyTrackerImpl(
     private val groupName: String?,
     override val targetSourceSets: GroupedSourceSets,
     override val groups: GroupedSourceSets,
@@ -102,6 +102,7 @@ private class KotlinHierarchyTrackerImpl(
     override fun withLinux() {
         withLinuxArm64()
         withLinuxX64()
+        addTarget("linuxArm32Hfp")
     }
 
     override fun withAndroidNative() {
@@ -143,10 +144,15 @@ private class KotlinHierarchyTrackerImpl(
 
     override fun withLinuxArm64() = addTarget("linuxArm64")
     override fun withLinuxX64() = addTarget("linuxX64")
+
+
     override fun withMacosArm64() = addTarget("macosArm64")
     override fun withMacosX64() = addTarget("macosX64")
     override fun withMingwX64() = addTarget("mingwX64")
     //endregion
+
+    @Deprecated(REMOVED_TARGET_MESSAGE, level = DeprecationLevel.ERROR)
+    override fun withLinuxArm32Hfp() = error("Target removed")
 
     //region Removed targets
     @Deprecated(REMOVED_TARGET_MESSAGE, level = DeprecationLevel.ERROR)
@@ -159,9 +165,6 @@ private class KotlinHierarchyTrackerImpl(
     override fun withMingwX86() = error("Target removed")
 
     @Deprecated(REMOVED_TARGET_MESSAGE, level = DeprecationLevel.ERROR)
-    override fun withLinuxArm32Hfp() = error("Target removed")
-
-    @Deprecated(REMOVED_TARGET_MESSAGE, level = DeprecationLevel.ERROR)
     override fun withLinuxMips32() = error("Target removed")
 
     @Deprecated(REMOVED_TARGET_MESSAGE, level = DeprecationLevel.ERROR)
@@ -171,7 +174,7 @@ private class KotlinHierarchyTrackerImpl(
     override fun withWasm32() = error("Target removed")
     //endregion
 
-    private fun addTarget(name: String) {
+    internal fun addTarget(name: String) {
         if (groupName == null) return
         check(!targetsFrozen) { "Can't add targets to already declared group: $groupName" }
 

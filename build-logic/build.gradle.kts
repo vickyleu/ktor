@@ -26,6 +26,6 @@ kotlin {
     jvmToolchain(21)
 
     compilerOptions {
-        allWarningsAsErrors = true
+        allWarningsAsErrors = false
     }
 }

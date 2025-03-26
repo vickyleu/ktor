@@ -2,6 +2,8 @@
  * Copyright 2014-2024 JetBrains s.r.o and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
+@file:OptIn(UnsafeNumber::class)
+
 package io.ktor.client.engine.curl.internal
 
 import io.ktor.websocket.*
@@ -24,7 +26,7 @@ internal class CurlWebSocketResponseBody(
     val incoming: ReceiveChannel<Frame>
         get() = _incoming
 
-    @OptIn(ExperimentalForeignApi::class)
+    @OptIn(ExperimentalForeignApi::class, UnsafeNumber::class)
     fun sendFrame(flags: Int, data: ByteArray) = memScoped {
         if (closed.value) return@memScoped
 

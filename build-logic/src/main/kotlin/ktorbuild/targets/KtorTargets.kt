@@ -7,6 +7,7 @@
 package ktorbuild.targets
 
 import ktorbuild.internal.KotlinHierarchyTracker
+import ktorbuild.internal.KotlinHierarchyTrackerImpl
 import ktorbuild.internal.TrackedKotlinHierarchyTemplate
 import ktorbuild.internal.gradle.ProjectGradleProperties
 import org.gradle.api.file.ProjectLayout
@@ -20,9 +21,7 @@ import org.gradle.kotlin.dsl.support.serviceOf
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
-import org.jetbrains.kotlin.gradle.plugin.KotlinHierarchyBuilder
-import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
-import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetTree
+import org.jetbrains.kotlin.gradle.plugin.*
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 import org.jetbrains.kotlin.konan.target.KonanTarget
 import javax.inject.Inject
@@ -99,11 +98,15 @@ abstract class KtorTargets internal constructor(
      * unless explicitly configured in `gradle.properties`.
      */
     fun isEnabled(target: String): Boolean = targetStates.getOrPut(target) {
-        // Sub-targets inherit parent state
-        if (target.contains(".")) {
-            isEnabled(target.substringBefore("."))
-        } else {
-            hierarchyTracker.targetSourceSets.getValue(target).any { it in directories }
+        try{
+            // Sub-targets inherit parent state
+            if (target.contains(".")) {
+                isEnabled(target.substringBefore("."))
+            } else {
+                hierarchyTracker.targetSourceSets.getValue(target).any { it in directories }
+            }
+        }catch (e:Exception){
+            false
         }
     }
 
@@ -128,7 +131,9 @@ abstract class KtorTargets internal constructor(
                     group("windows") { withMingw() }
 
                     group("nix") {
-                        group("linux") { withLinux() }
+                        group("linux") {
+                            withLinux()
+                        }
 
                         group("darwin") {
                             group("ios") { withIos() }
@@ -194,6 +199,7 @@ private fun KotlinHierarchyBuilder.withAndroidNativeArm32Fixed() {
     }
 }
 
+
 internal fun KotlinMultiplatformExtension.addTargets(targets: KtorTargets) {
     if (targets.hasJvm) jvm()
 
@@ -212,8 +218,13 @@ internal fun KotlinMultiplatformExtension.addTargets(targets: KtorTargets) {
     if (targets.isEnabled("iosSimulatorArm64")) iosSimulatorArm64()
 
     // Tier 2
-    if (targets.isEnabled("linuxArm64")) linuxArm64()
-    if (targets.isEnabled("linuxX64")) linuxX64()
+    if (targets.isEnabled("linuxArm64"))
+        linuxArm64()
+    @Suppress("DEPRECATION")
+    if (targets.isEnabled("linuxArm32Hfp"))
+        linuxArm32Hfp()
+    if (targets.isEnabled("linuxX64"))
+        linuxX64()
     if (targets.isEnabled("watchosArm32")) watchosArm32()
     if (targets.isEnabled("watchosArm64")) watchosArm64()
     if (targets.isEnabled("watchosX64")) watchosX64()
@@ -227,7 +238,7 @@ internal fun KotlinMultiplatformExtension.addTargets(targets: KtorTargets) {
     if (targets.isEnabled("androidNativeArm64")) androidNativeArm64()
     if (targets.isEnabled("androidNativeX86")) androidNativeX86()
     if (targets.isEnabled("androidNativeX64")) androidNativeX64()
-    if (targets.isEnabled("mingwX64")) mingwX64()
+    if (targets.isEnabled("mingwX64"))  mingwX64()
     if (targets.isEnabled("watchosDeviceArm64")) watchosDeviceArm64()
 
     freezeSourceSets()

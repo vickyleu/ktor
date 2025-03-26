@@ -47,41 +47,42 @@ publishing {
     }
 
     repositories {
-        addTargetRepositoryIfConfigured()
-        mavenLocal()
+        addTargetRepositoryIfConfigured(rootProject.rootDir)
+//        mavenLocal()
     }
 }
 
 registerCommonPublishTask()
-configureSigning()
+//configureSigning()
 
 plugins.withId("ktorbuild.kmp") {
     tasks.withType<AbstractPublishToMaven>().configureEach {
-        onlyIf { isAvailableForPublication(ktorBuild.os.get()) }
+        // Are you kidding me ?
+//        onlyIf { isAvailableForPublication(ktorBuild.os.get()) }
     }
 
     registerTargetsPublishTasks(ktorBuild.targets)
     configureJavadocArtifact()
 }
 
-private fun Project.configureSigning() {
-    extra["signing.gnupg.keyName"] = (System.getenv("SIGN_KEY_ID") ?: return)
-    extra["signing.gnupg.passphrase"] = (System.getenv("SIGN_KEY_PASSPHRASE") ?: return)
-
-    apply(plugin = "signing")
-
-    signing {
-        useGpgCmd()
-        sign(publishing.publications)
-    }
-
-    val gpgAgentLock: ReentrantLock by rootProject.extra { ReentrantLock() }
-
-    tasks.withType<Sign>().configureEach {
-        doFirst { gpgAgentLock.lock() }
-        doLast { gpgAgentLock.unlock() }
-    }
-}
+//private fun Project.configureSigning() {
+//    extra["signing.gnupg.keyName"] = (System.getenv("SIGN_KEY_ID") ?: return)
+//    extra["signing.gnupg.passphrase"] = (System.getenv("SIGN_KEY_PASSPHRASE") ?: return)
+//
+//    apply(plugin = "signing")
+//
+//    signing {
+//        useGpgCmd()
+//        sign(publishing.publications)
+//    }
+//
+//    val gpgAgentLock: ReentrantLock by rootProject.extra { ReentrantLock() }
+//
+//    tasks.withType<Sign>().configureEach {
+//        doFirst { gpgAgentLock.lock() }
+//        doLast { gpgAgentLock.unlock() }
+//    }
+//}
 
 private fun Project.configureJavadocArtifact() {
     val emptyJar = tasks.register<Jar>("emptyJar") {

@@ -352,6 +352,9 @@ ktor-client-websockets-js
 ktor-client-websockets-jvm
 ktor-client-websockets-macosarm64
 ktor-client-websockets-macosx64
+ktor-client-websockets-linuxx64
+ktor-client-websockets-linuxarm64
+ktor-client-websockets-linuxarm32hfp
 ktor-client-websockets-tvosarm64
 ktor-client-websockets-tvossimulatorarm64
 ktor-client-websockets-tvosx64
@@ -1325,6 +1328,9 @@ ktor-server-websockets-macosx64
 ktor-server-websockets-tvosarm64
 ktor-server-websockets-tvossimulatorarm64
 ktor-server-websockets-tvosx64
+ktor-server-websockets-linuxx64
+ktor-server-websockets-linuxarm64
+ktor-server-websockets-linuxarm32hfp
 ktor-server-websockets-wasm-js
 ktor-server-websockets-watchosarm32
 ktor-server-websockets-watchosarm64

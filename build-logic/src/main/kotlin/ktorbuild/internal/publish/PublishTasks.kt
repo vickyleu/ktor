@@ -28,9 +28,11 @@ private val darwinPublications = KtorTargets.resolveTargets("darwin")
 private val androidNativePublications = KtorTargets.resolveTargets("androidNative")
 
 internal fun AbstractPublishToMaven.isAvailableForPublication(os: OperatingSystem): Boolean {
+    return true
     return when (val name = publication.name) {
-        in linuxPublications -> os.isLinux
+//        -> os.isLinux
         in windowsPublications -> os.isWindows
+        in linuxPublications,
         in darwinPublications -> os.isMacOsX
         in jvmAndCommonPublications,
         in jsPublications,

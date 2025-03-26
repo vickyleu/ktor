@@ -42,7 +42,7 @@ internal actual fun pack_sockaddr_un(
     }
 }
 
-@OptIn(ExperimentalForeignApi::class)
+@OptIn(ExperimentalForeignApi::class, UnsafeNumber::class)
 internal actual fun ktor_recvfrom(
     __fd: Int,
     __buf: CValuesRef<ByteVar>?,

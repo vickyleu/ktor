@@ -412,6 +412,7 @@ public class SSEClientResponseAdapter : ResponseAdapter {
                 )
         ) {
             outgoingContent as SSEClientContent
+            @Suppress("DEPRECATION")
             DefaultClientSSESession(outgoingContent, responseBody)
         } else {
             null

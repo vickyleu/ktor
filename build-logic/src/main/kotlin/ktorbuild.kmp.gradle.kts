@@ -63,6 +63,9 @@ if (targets.hasNative) {
     tasks.maybeNamed("linkDebugTestLinuxArm64") {
         onlyIf("run only on Linux") { ktorBuild.os.get().isLinux }
     }
+    tasks.maybeNamed("linkDebugTestLinuxArm32Hfp") {
+        onlyIf("run only on Linux") { ktorBuild.os.get().isLinux }
+    }
     tasks.maybeNamed("linkDebugTestMingwX64") {
         onlyIf("run only on Windows") { ktorBuild.os.get().isWindows }
     }

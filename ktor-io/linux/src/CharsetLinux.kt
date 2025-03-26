@@ -2,6 +2,8 @@
  * Copyright 2014-2024 JetBrains s.r.o and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
+@file:OptIn(UnsafeNumber::class)
+
 package io.ktor.utils.io.charsets
 
 import io.ktor.utils.io.core.*
@@ -11,6 +13,7 @@ import kotlinx.io.unsafe.*
 import platform.iconv.*
 import platform.posix.*
 
+@OptIn(UnsafeNumber::class)
 internal val MAX_SIZE: size_t = size_t.MAX_VALUE
 private const val DECODING_BUFFER_SIZE = 8192
 
@@ -55,7 +58,7 @@ internal fun checkErrors(iconvOpenResults: COpaquePointer?, charset: String) {
     }
 }
 
-@OptIn(ExperimentalForeignApi::class, InternalIoApi::class, UnsafeIoApi::class)
+@OptIn(ExperimentalForeignApi::class, InternalIoApi::class, UnsafeIoApi::class, UnsafeNumber::class)
 internal actual fun CharsetEncoder.encodeImpl(input: CharSequence, fromIndex: Int, toIndex: Int, dst: Sink): Int {
     val length = toIndex - fromIndex
     if (length == 0) return 0
@@ -72,14 +75,14 @@ internal actual fun CharsetEncoder.encodeImpl(input: CharSequence, fromIndex: In
                 val outbuf = alloc<CPointerVar<ByteVar>>()
                 val inbytesleft = alloc<size_tVar>()
                 inbuf.value = from.addressOf(0).reinterpret()
-                inbytesleft.value = (length * 2).toULong()
+                inbytesleft.value = (length * 2).toULong().convert()
                 val outbytesleft = alloc<size_tVar>()
 
                 while (inbytesleft.value.toLong() > 0) {
                     UnsafeBufferOperations.writeToTail(dst.buffer, 1) { to, toStart, toEnd ->
                         to.usePinned {
                             outbuf.value = it.addressOf(toStart).reinterpret()
-                            outbytesleft.value = (toEnd - toStart).toULong()
+                            outbytesleft.value = (toEnd - toStart).toULong().convert()
 
                             /**
                              * inbuf is shifted by the number of bytes consumed
@@ -107,7 +110,7 @@ internal actual fun CharsetEncoder.encodeImpl(input: CharSequence, fromIndex: In
     return length
 }
 
-@OptIn(ExperimentalForeignApi::class, UnsafeIoApi::class, InternalIoApi::class)
+@OptIn(ExperimentalForeignApi::class, UnsafeIoApi::class, InternalIoApi::class, UnsafeNumber::class)
 public actual fun CharsetDecoder.decode(input: Source, dst: Appendable, max: Int): Int {
     val charset = iconvCharsetName(charset.name)
     val cd = iconv_open(platformUtf16, charset)
@@ -126,13 +129,13 @@ public actual fun CharsetDecoder.decode(input: Source, dst: Appendable, max: Int
                     UnsafeBufferOperations.readFromHead(input.buffer) { data, startIndex, endIndex ->
                         data.usePinned {
                             inbuf.value = it.addressOf(startIndex).reinterpret()
-                            inbytesleft.value = (endIndex - startIndex).toULong()
+                            inbytesleft.value = (endIndex - startIndex).toULong().convert()
 
                             outbuf.value = output.addressOf(0).reinterpret()
-                            outbytesleft.value = (chars.size * 2).toULong()
+                            outbytesleft.value = (chars.size * 2).toULong().convert()
 
                             val result = iconv(cd, inbuf.ptr, inbytesleft.ptr, outbuf.ptr, outbytesleft.ptr)
-                            if (result == MAX_SIZE.toULong()) {
+                            if (result.toULong() == MAX_SIZE.toULong()) {
                                 checkIconvResult(posix_errno())
                             }
 
