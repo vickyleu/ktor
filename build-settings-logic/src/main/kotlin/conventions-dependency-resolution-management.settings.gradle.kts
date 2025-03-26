@@ -43,11 +43,12 @@ pluginManagement {
             }
 
             mavenLocal()
-            maven("${rootProject.projectDir.let {
-                if(it.name.startsWith("build-"))it.parentFile
-                else  it
-            }.resolve("maven/myRepo").absolutePath}")
-
+            maven {
+                url = uri("https://raw.githubusercontent.com/vickyleu/kotlin_linuxarm32hfp_maven/main")
+                content{
+                    includeGroupByRegex("com.vickyleu.*")
+                }
+            }
             exclusiveContent {
                 forRepository {
                     maven("https://maven.pkg.jetbrains.space/public/p/ktor/eap") { name = "KtorEAP" }

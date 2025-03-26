@@ -1,4 +1,7 @@
 build
+library/curl-*
+library/openssl-*
+
 .gradle
 .gradletasknamecache
 .idea/*
