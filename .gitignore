@@ -2,6 +2,7 @@ build
 maven/
 library/curl-*
 library/openssl-*
+library/zlib-*
 
 .gradle
 .gradletasknamecache
