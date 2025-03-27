@@ -1,6 +1,6 @@
 ### 编译器
- export CC=armv7-linux-gnueabihf-gcc     
- export CXX=armv7-linux-gnueabihf-g++
+export CC=armv7-linux-gnueabihf-gcc     
+export CXX=armv7-linux-gnueabihf-g++
 export AR=armv7-linux-gnueabihf-ar
 export AS=armv7-linux-gnueabihf-as
 export LD=armv7-linux-gnueabihf-ld
@@ -44,13 +44,23 @@ make clean 2>/dev/null
 
 # 配置命令
 # 添加 no-secure-getenv 选项
+
 ./Configure linux-armv4 \
-no-shared \
 no-dso \
 no-hw \
 no-engine \
 -fPIC \
 --prefix=/Volumes/Extra/Github/ktor/library/openssl-3.4.1/build
+
+
+
+**./Configure linux-armv4 \
+no-shared \
+no-dso \
+no-hw \
+no-engine \
+-fPIC \
+--prefix=/Volumes/Extra/Github/ktor/library/openssl-3.4.1/build**
 
 
 # 编译并安装
@@ -98,30 +108,8 @@ make install
 
 
 # libz.a编译
-export PATH=$PATH:/usr/local/Cellar/armv7-unknown-linux-gnueabihf/13.3.0/toolchain/bin
-
-export LD=armv7-linux-gnueabihf-ld
-export RANLIB=armv7-linux-gnueabihf-ranlib
-export STRIP=armv7-linux-gnueabihf-strip
-export NM=armv7-linux-gnueabihf-nm
-export OBJCOPY=armv7-linux-gnueabihf-objcopy
-export OBJDUMP=armv7-linux-gnueabihf-objdump
-export READELF=armv7-linux-gnueabihf-readelf
-export SYSROOT=/usr/local/Cellar/armv7-unknown-linux-gnueabihf/13.3.0/toolchain/armv7-unknown-linux-gnueabihf/sysroot
-
-
-export ARM_TOOLCHAIN_PATH="/usr/local/Cellar/armv7-unknown-linux-gnueabihf/13.3.0/toolchain/bin"
-
-export AR="${ARM_TOOLCHAIN_PATH}/armv7-unknown-linux-gnueabihf-ar"
-export RANLIB="${ARM_TOOLCHAIN_PATH}/armv7-unknown-linux-gnueabihf-ranlib"
-
-export CC="armv7-linux-gnueabihf-gcc --sysroot=$SYSROOT"  
-export CXX="armv7-linux-gnueabihf-g++ --sysroot=$SYSROOT"  
-export CFLAGS="-march=armv7-a -mfpu=neon -mfloat-abi=hard -fPIC --sysroot=${SYSROOT}"
-export LDFLAGS="--sysroot=$SYSROOT"
-export ARFLAGS=rcs
 # 重要, 这里需要配置交叉编译器,否则生成的makefile会有问题
-export CHOST="armv7-linux-gnueabihf-gcc"
-./configure --prefix=$PWD/build  --static
+export CHOST="armv7-linux-gnueabihf-gcc" 
+./configure --prefix=$PWD/build  --host=armv7-linux-gnueabihf  //--static
 
 

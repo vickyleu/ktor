@@ -18,8 +18,14 @@ kotlin {
             // 添加 zlib 头文件路径（如果头文件不在默认路径）
             val ta= includeDirs.allHeadersDirs.toList().toTypedArray()
             includeDirs(*ta,file("desktop/interop/include/zlib"))
+            // 现在要换成动态库
+            extraOpts(
+                "-libraryPath", file("desktop/interop/lib/$target"),
+//                "-L${file("desktop/interop/lib/$target")}"
+            )
+        }else{
+            extraOpts("-libraryPath", file("desktop/interop/lib/$target"))
         }
-        extraOpts("-libraryPath", file("desktop/interop/lib/$target"))
     }
 
     sourceSets {
