@@ -3,7 +3,7 @@ maven/
 library/curl-*
 library/openssl-*
 library/zlib-*
-
+*/**/.idea/
 .gradle
 .gradletasknamecache
 .idea/*

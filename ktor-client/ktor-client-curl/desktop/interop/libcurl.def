@@ -14,7 +14,9 @@ linkerOpts.osx = -framework Security -framework SystemConfiguration
 staticLibraries.linux_x64 = libcurl.a libssl.a libcrypto.a
 staticLibraries.linux_arm64 = libcurl.a libssl.a libcrypto.a
 staticLibraries.linux_arm32_hfp = libcurl.a libssl.a libcrypto.a libz.a
-
+# -L$path no need specify the path, extraOpts -libraryPath is used to specify the path
 linkerOpts.linux_x64 = -lz
 linkerOpts.linux_arm64 = -lz
+# arm32 libz.a is placed in the libs
+# linkerOpts.linux_arm32_hfp = -lz
 
