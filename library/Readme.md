@@ -113,3 +113,24 @@ export CHOST="armv7-linux-gnueabihf-gcc"
 ./configure --prefix=$PWD/build  --host=armv7-linux-gnueabihf  //--static
 
 
+
+# icu 编译
+wget https://github.com/unicode-org/icu/archive/refs/tags/release-77-1.tar.gz
+
+mkdir build-arm
+cd build-arm
+
+# 先构建一个当前平台的版本,用于交叉编译的
+../icu4c/source/configure  --enable-static --disable-shared   --prefix=/Volumes/Extra/Github/ktor/library/icu-release-77-1/build-arm \
+--disable-samples
+# 只要make, 不要install, 因为我们只需要编译出来的libicuuc.a和libicudata.a
+make 
+# 再使用前面编译的结果来进行交叉编译
+../icu4c/source/configure  --enable-static --disable-shared   --host=armv7-unknown-linux-gnueabihf \
+--with-cross-build=/Volumes/Extra/Github/ktor/library/icu-release-77-1/build-arm \
+--prefix=/Volumes/Extra/Github/ktor/library/icu-release-77-1/build --with-sysroot=$SYSROOT  \
+--disable-samples
+
+
+make -j$(nproc)
+make install

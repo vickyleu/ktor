@@ -3,6 +3,8 @@ maven/
 library/curl-*
 library/openssl-*
 library/zlib-*
+library/icu-*
+library/icu_*
 */**/.idea/
 .gradle
 .gradletasknamecache
